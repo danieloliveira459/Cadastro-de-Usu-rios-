@@ -28,11 +28,16 @@ export default function Pastor() {
     localStorage.setItem("visitantes", JSON.stringify(novaLista));
   };
 
-  //  GERAR PDF ESTILIZADO
+  // 🔥 GERAR PDF (COM VALIDAÇÃO)
   const gerarPDF = () => {
+    if (visitantes.length === 0) {
+      alert("Nenhum visitante cadastrado para gerar o PDF!");
+      return;
+    }
+
     const doc = new jsPDF();
 
-    //  TÍTULO CENTRALIZADO E NEGRITO
+    // 🔴 TÍTULO CENTRALIZADO
     doc.setTextColor(220, 38, 38);
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
@@ -44,7 +49,6 @@ export default function Pastor() {
       { align: "center" }
     );
 
-    //  RESET PADRÃO
     doc.setFont("helvetica", "normal");
     doc.setTextColor(0, 0, 0);
 
@@ -61,7 +65,6 @@ export default function Pastor() {
       body: tabela,
       startY: 20,
 
-      //  CABEÇALHO
       headStyles: {
         fillColor: [220, 38, 38],
         textColor: [255, 255, 255],
@@ -69,18 +72,15 @@ export default function Pastor() {
         fontStyle: "bold",
       },
 
-      //  CORPO
       bodyStyles: {
         fillColor: [255, 255, 255],
         textColor: [0, 0, 0],
       },
 
-      //  LINHAS ALTERNADAS
       alternateRowStyles: {
         fillColor: [245, 245, 245],
       },
 
-      //  BORDAS
       styles: {
         lineColor: [200, 200, 200],
         lineWidth: 0.3,
@@ -139,7 +139,7 @@ export default function Pastor() {
           {/* DIREITA */}
           <div className="card">
             <div 
-              className="card-header" 
+              className="card-header"
               style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
             >
               
@@ -148,11 +148,10 @@ export default function Pastor() {
                 Visitantes Cadastrados
               </h2>
 
-              {/*  BOTÃO PDF */}
+              {/* 🔥 BOTÃO SEMPRE VISÍVEL */}
               <button
                 onClick={gerarPDF}
-                disabled={visitantes.length === 0}
-                className={`btn-pdf ${visitantes.length === 0 ? "disabled" : ""}`}
+                className="btn-pdf"
               >
                 <FaFilePdf /> Gerar PDF
               </button>
@@ -205,4 +204,3 @@ export default function Pastor() {
     </>
   );
 }
-/**/
