@@ -1,9 +1,7 @@
 import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react"; 
-import { FaArrowLeft, FaUsers, FaTrash, FaFilePdf } from "react-icons/fa6";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+import { FaArrowLeft, FaUsers, FaTrash } from "react-icons/fa6";
 import "./Pastor.css";
 
 export default function Pastor() {
@@ -11,7 +9,7 @@ export default function Pastor() {
 
   const [visitantes, setVisitantes] = useState([]);
 
-  // CARREGA OS DADOS
+  // CARREGA OS DADOS COM SEGURANÇA
   useEffect(() => {
     try {
       const dados = JSON.parse(localStorage.getItem("visitantes"));
@@ -28,70 +26,9 @@ export default function Pastor() {
     localStorage.setItem("visitantes", JSON.stringify(novaLista));
   };
 
-  //  GERAR PDF ESTILIZADO
-  const gerarPDF = () => {
-    const doc = new jsPDF();
-
-    //  TÍTULO CENTRALIZADO E NEGRITO
-    doc.setTextColor(220, 38, 38);
-    doc.setFontSize(16);
-    doc.setFont("helvetica", "bold");
-
-    doc.text(
-      "Visitantes Cadastrados",
-      doc.internal.pageSize.getWidth() / 2,
-      15,
-      { align: "center" }
-    );
-
-    //  RESET PADRÃO
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(0, 0, 0);
-
-    const tabela = visitantes.map((v) => [
-      v.nome,
-      v.cargo,
-      v.telefone,
-      v.igreja,
-      v.data,
-    ]);
-
-    autoTable(doc, {
-      head: [["Nome", "Cargo", "Telefone", "Igreja", "Data"]],
-      body: tabela,
-      startY: 20,
-
-      //  CABEÇALHO
-      headStyles: {
-        fillColor: [220, 38, 38],
-        textColor: [255, 255, 255],
-        halign: "center",
-        fontStyle: "bold",
-      },
-
-      //  CORPO
-      bodyStyles: {
-        fillColor: [255, 255, 255],
-        textColor: [0, 0, 0],
-      },
-
-      //  LINHAS ALTERNADAS
-      alternateRowStyles: {
-        fillColor: [245, 245, 245],
-      },
-
-      //  BORDAS
-      styles: {
-        lineColor: [200, 200, 200],
-        lineWidth: 0.3,
-      },
-    });
-
-    doc.save("visitantes.pdf");
-  };
-
   return (
     <>
+      {/*  HEADER IGUAL AO PROTÓTIPO */}
       <Header />
 
       <div className="pastor-container">
@@ -134,32 +71,19 @@ export default function Pastor() {
                   ))
               )}
             </div>
+
           </div>
 
           {/* DIREITA */}
           <div className="card">
-            <div 
-              className="card-header" 
-              style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
-            >
-              
+            <div className="card-header">
               <h2 className="card-title">
                 <FaUsers className="icon" />
                 Visitantes Cadastrados
               </h2>
 
-              {/*  BOTÃO PDF */}
-              <button
-                onClick={gerarPDF}
-                disabled={visitantes.length === 0}
-                className={`btn-pdf ${visitantes.length === 0 ? "disabled" : ""}`}
-              >
-                <FaFilePdf /> Gerar PDF
-              </button>
-
+              <span>Total: {visitantes.length}</span>
             </div>
-
-            <span>Total: {visitantes.length}</span>
 
             {visitantes.length === 0 ? (
               <div className="empty">
