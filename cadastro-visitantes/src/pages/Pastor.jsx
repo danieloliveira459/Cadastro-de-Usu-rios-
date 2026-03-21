@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react"; 
 import { FaArrowLeft, FaUsers, FaTrash, FaFilePdf } from "react-icons/fa6";
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+import "jspdf-autotable"; // ✅ CORRETO PARA VERCEL
 import "./Pastor.css";
 
 export default function Pastor() {
@@ -28,7 +28,7 @@ export default function Pastor() {
     localStorage.setItem("visitantes", JSON.stringify(novaLista));
   };
 
-  // 🔥 GERAR PDF (COM VALIDAÇÃO)
+  // 🔥 GERAR PDF
   const gerarPDF = () => {
     if (visitantes.length === 0) {
       alert("Nenhum visitante cadastrado para gerar o PDF!");
@@ -37,7 +37,7 @@ export default function Pastor() {
 
     const doc = new jsPDF();
 
-    // 🔴 TÍTULO CENTRALIZADO
+    // 🔴 TÍTULO CENTRALIZADO E NEGRITO
     doc.setTextColor(220, 38, 38);
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
@@ -49,6 +49,7 @@ export default function Pastor() {
       { align: "center" }
     );
 
+    // RESET
     doc.setFont("helvetica", "normal");
     doc.setTextColor(0, 0, 0);
 
@@ -60,7 +61,8 @@ export default function Pastor() {
       v.data,
     ]);
 
-    autoTable(doc, {
+    // 🔥 TABELA ESTILIZADA
+    doc.autoTable({
       head: [["Nome", "Cargo", "Telefone", "Igreja", "Data"]],
       body: tabela,
       startY: 20,
@@ -140,7 +142,11 @@ export default function Pastor() {
           <div className="card">
             <div 
               className="card-header"
-              style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center"
+              }}
             >
               
               <h2 className="card-title">
